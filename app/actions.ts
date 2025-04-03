@@ -6,7 +6,7 @@ import { VerificationUserTemplate } from "@/shared/components/shared/email-templ
 import { CheckoutFormValues } from "@/shared/constants";
 import { sendEmail } from "@/shared/lib";
 import { getUserSession } from "@/shared/lib/get-user-session";
-import { OrderStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { hashSync } from "bcrypt";
 import { cookies } from "next/headers";
 
@@ -59,7 +59,6 @@ export async function createOrder(data: CheckoutFormValues) {
         address: data.address,
         comment: data.comment,
         totalAmount: userCart.totalAmount,
-        status: OrderStatus.PENDING,
         items: JSON.stringify(userCart.items),
       },
     });
