@@ -4,7 +4,7 @@ import { prisma } from "@/prisma/prisma-client";
 import { PayOrderTemplate } from "@/shared/components";
 import { VerificationUserTemplate } from "@/shared/components/shared/email-templates/verification-user";
 import { CheckoutFormValues } from "@/shared/constants";
-import { createPayment, sendEmail } from "@/shared/lib";
+import { sendEmail } from "@/shared/lib";
 import { getUserSession } from "@/shared/lib/get-user-session";
 import { OrderStatus, Prisma } from "@prisma/client";
 import { hashSync } from "bcrypt";
