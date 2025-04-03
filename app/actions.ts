@@ -80,6 +80,12 @@ export async function createOrder(data: CheckoutFormValues) {
       },
     });
 
+    await prisma.order.update({
+      where: {
+        id: order.id,
+      },
+    });
+
     await sendEmail(
       data.email,
       "Next Pizza / Zaplaťte za svou objednávku #" + order.id,
@@ -88,7 +94,6 @@ export async function createOrder(data: CheckoutFormValues) {
         totalAmount: order.totalAmount,
       })
     );
-
   } catch (err) {
     console.log("[CreateOrder] Server error", err);
   }
