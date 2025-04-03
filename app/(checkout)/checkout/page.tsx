@@ -15,8 +15,6 @@ import {
 import { checkoutFormSchema, CheckoutFormValues } from "@/shared/constants";
 import { useCart } from "@/shared/hooks";
 import { cn } from "@/shared/lib/utils";
-import { createOrder } from "@/app/actions";
-import toast from "react-hot-toast";
 import React, { Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { Api } from "@/shared/services/api-client";
@@ -53,27 +51,6 @@ export default function CheckoutPage() {
       fetchUserInfo();
     }
   }, [session]);
-
-  const onSubmit = async (data: CheckoutFormValues) => {
-    try {
-      setSubmitting(true);
-      const url = await createOrder(data);
-
-      toast.error("Objednávka byla úspěšně zadána! 📝 Přepněte na platbu...", {
-        icon: "✅",
-      });
-
-      if (url) {
-        location.href = url;
-      }
-    } catch (err) {
-      console.log(err);
-      setSubmitting(false);
-      toast.error("Nepodařilo se objednat", {
-        icon: "❌",
-      });
-    }
-  };
 
   const onClickCountButton = (
     id: number,
