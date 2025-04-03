@@ -49,6 +49,20 @@ export async function createOrder(data: CheckoutFormValues) {
       throw new Error("Cart is empty");
     }
 
+    /* Создаем заказ */
+    const order = await prisma.order.create({
+      data: {
+        token: cartToken,
+        fullName: data.firstName + " " + data.lastName,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        comment: data.comment,
+        totalAmount: userCart.totalAmount,
+        items: JSON.stringify(userCart.items),
+      },
+    });
+
     /* Очищаем корзину */
     await prisma.cart.update({
       where: {
@@ -64,6 +78,15 @@ export async function createOrder(data: CheckoutFormValues) {
         cartId: userCart.id,
       },
     });
+
+    await sendEmail(
+      data.email,
+      "Next Pizza / Zaplaťte za svou objednávku #" + order.id,
+      PayOrderTemplate({
+        orderId: order.id,
+        totalAmount: order.totalAmount,
+      })
+    );
 
   } catch (err) {
     console.log("[CreateOrder] Server error", err);
