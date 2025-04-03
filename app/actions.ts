@@ -80,38 +80,14 @@ export async function createOrder(data: CheckoutFormValues) {
       },
     });
 
-    const paymentData = await createPayment({
-      amount: order.totalAmount,
-      orderId: order.id,
-      description: "Platba za objednávku #" + order.id,
-    });
-
-    if (!paymentData) {
-      throw new Error("Payment data not found");
-    }
-
-    await prisma.order.update({
-      where: {
-        id: order.id,
-      },
-      data: {
-        paymentId: paymentData.id,
-      },
-    });
-
-    const paymentUrl = paymentData.confirmation.confirmation_url;
-
     await sendEmail(
       data.email,
       "Next Pizza / Zaplaťte za svou objednávku #" + order.id,
       PayOrderTemplate({
         orderId: order.id,
         totalAmount: order.totalAmount,
-        paymentUrl,
       })
     );
-
-    return paymentUrl;
   } catch (err) {
     console.log("[CreateOrder] Server error", err);
   }
